@@ -25,7 +25,7 @@ import generateToken from '../utils/generateToken.js';
                 isAdmin: user.isAdmin,
             });
         } else {
-            res.status(401);
+            res.status(400);
             throw new Error('Invalid email or Password');
         }
         
