@@ -11,22 +11,23 @@ import { clearCartItems } from '../slices/cartSlice';
 
 const PlaceOrderScreen = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
     const cart = useSelector((state) => state.cart);
-
+    
     const [createOrder, {isLoading, error}] = useCreateOrderMutation();
-
+    
     useEffect(() => {
         if(!cart.shippingAddress.address){
             navigate('/shipping');
         }else if(!cart.paymentMethod){
-          navigate('/payment');
+            navigate('/payment');
         }
     }, [cart.paymentMethod, cart.shippingAddress.address, navigate]);
 
+    const dispatch = useDispatch();
+
     const placeOrderHandler = async () => {
         try {
-           const res = await createOrder({
+          const res = await createOrder({
             orderItems: cart.cartItems,
             shippingAddress: cart.shippingAddress,
             paymentMethod: cart.paymentMethod,
@@ -34,14 +35,13 @@ const PlaceOrderScreen = () => {
             shippingPrice: cart.shippingPrice,
             taxPrice: cart.taxPrice,
             totalPrice: cart.totalPrice,
-           }).unwrap();
-
-           dispatch(clearCartItems());
-           navigate(`/order/${res._id}`);
-        } catch (error) {
-            toast.error(error);
+          }).unwrap();
+          dispatch(clearCartItems());
+          navigate(`/order/${res._id}`);
+        } catch (err) {
+          toast.error(err);
         }
-    }
+      };
 
   return (
     <>
@@ -83,12 +83,12 @@ const PlaceOrderScreen = () => {
                                         />
                                     </Col>
                                     <Col>
-                                    <Link to={`/products/${item.product}`}>
+                                    <Link to={`/product/${item.product}`}>
                                         {item.name}
                                     </Link>
                                     </Col>
                                     <Col md={4}>
-                                        {item.qty} x ₹{item.price} = ₹{item.qty * item.price}
+                                        {item.qty} x ₹{item.price} = ₹{(item.qty * (item.price *100))/100}
                                     </Col>
                                   </Row>
                                 </ListGroup.Item>

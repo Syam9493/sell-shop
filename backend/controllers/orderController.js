@@ -1,5 +1,6 @@
 import asyncHandler from '../middleware/asyncHandler.js';
 import Order from '../models/orderModel.js';
+//import Paroduct from '../models/productModel.js';
    
 
     // @desc Create new Order
@@ -66,15 +67,34 @@ import Order from '../models/orderModel.js';
     });
 
      // @desc Update order to paid
-    // @route GET/api/orders/:id/pay
+    // @route PUT/api/orders/:id/pay
     //@acces Private
 
-    const updateOrderToPaid = asyncHandler(async(req,res)=>{
-        res.send('update Order to Paid');
+    const updateOrderToPaid = asyncHandler( async (req,res)=>{
+        const order = await Order.findById(req.params.id);
+
+       if(order){
+        order.isPaid = true,
+        order.paidAt = Date.now();
+        order.paymentResult = {
+            id: req.body.id,
+            status: req.body.status,
+            update_time: req.body.update_time,
+            email_address: req.body.payer.email_address,
+        };
+        
+        const updatedOrder= await order.save();
+
+        res.status(200).json(updatedOrder);
+
+       } else {
+        res.status(404);
+        throw new Error('Order not found');
+       }
     });
 
      // @desc Update order to delivered
-    // @route GET/api/orders/:id/deliver
+    // @route PUT/api/orders/:id/deliver
     //@acces Private/Admin
 
     const updateOrderToDelivered = asyncHandler(async(req,res)=>{
