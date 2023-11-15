@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import Rating from '../Components/Rating';
 import Loader from '../Components/Loader';
 import Message from '../Components/Message';
-import { useGetProductQuery } from '../slices/productsApiSlice';
+import { useGetProductDetailsQuery } from '../slices/productsApiSlice';
 import {addToCart} from '../slices/cartSlice'
 
 const ProductScreen = () => {
@@ -18,7 +18,7 @@ const ProductScreen = () => {
 
   const [qty,setQty] = useState(1);
 
-const {data: product,  isLoading, error} = useGetProductQuery(productId);
+const {data: product,  isLoading, error} = useGetProductDetailsQuery(productId);
    
 const addToCartHandler = () => {
     dispatch(addToCart({...product, qty}));
