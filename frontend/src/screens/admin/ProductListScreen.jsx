@@ -1,14 +1,19 @@
 import React from 'react';
 import {LinkContainer} from 'react-router-bootstrap';
 import {Table, Button, Row, Col } from 'react-bootstrap';
+import {useParams} from 'react-router-dom'
 import { FaEdit, FaTrash} from 'react-icons/fa';
 import Message from '../../Components/Message';
+import Paginate from '../../Components/Paginate'
 import Loader from '../../Components/Loader';
 import { toast } from 'react-toastify'
 import {useGetProductsQuery, useCreateProductMutation, useDeleteProductMutation} from '../../slices/productsApiSlice'
 
 const ProductListScreen = () => {
-    const {data: products, refetch, isLoading, error } = useGetProductsQuery();
+    
+  const {pageNumber} = useParams();
+
+    const {data, refetch, isLoading, error } = useGetProductsQuery({pageNumber});
 
     const [createProduct, {isLoading: loadingCreate }] = useCreateProductMutation();
 
@@ -52,7 +57,7 @@ const ProductListScreen = () => {
       </Row>
        {loadingCreate && <Loader/>}
        {loadingDelete && <Loader/>}
-      {isLoading ? <Loader/> : error ? <Message variant='danger'>{error}</Message>
+      {isLoading ? <Loader/> : error ? <Message variant='danger'>{error.data.message}</Message>
       : (
         <>
         <Table striped hover responsive className=' table-sm '>
@@ -67,7 +72,7 @@ const ProductListScreen = () => {
                 </tr>
             </thead>
             <tbody>
-                {products.map((product) => (
+                {data.products.map((product) => (
                     <tr key={product._id}>
                          <td>{product._id}</td>
                         <td>{product.name}</td>
@@ -88,6 +93,7 @@ const ProductListScreen = () => {
                 ))}
             </tbody>
         </Table>
+        <Paginate pages={data.pages} page={data.page} isAdmin={true}/>
         </>
       )
     }

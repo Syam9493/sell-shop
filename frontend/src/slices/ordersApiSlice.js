@@ -21,7 +21,7 @@ export const  ordersApiSlice = apiSlice.injectEndpoints({
             query: ( {orderId, details }) => ({
               url: `${ORDERS_URL}/${orderId}/pay`,
               method: 'PUT',
-              body: details,
+              body: {...details},
             }),
           }),
         getPayPalClientId: builder.query({
