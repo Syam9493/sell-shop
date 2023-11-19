@@ -122,6 +122,7 @@ const addToCartHandler = () => {
      </Card>
     </Col>
    </Row>
+   {loadingProductReview && <Loader />}
    <Row className='review'>
             <Col md={6}>
               <h2>Reviews</h2>
@@ -138,7 +139,7 @@ const addToCartHandler = () => {
                 <ListGroup.Item>
                   <h2>Write a Customer Review</h2>
 
-                  {loadingProductReview && <Loader />}
+                  
 
                   {userInfo ? (
                     <Form onSubmit={submitHandler}>
